@@ -1,0 +1,17 @@
+const mongoose = require('mongoose');
+
+const moduleSchema = new Schema(
+    {
+        module_name : String ,
+        project_id :{
+            type:mongoose.Schema.Types.ObjectId,
+            ref : 'module'
+        },
+        task_id : {
+            type:mongoose.Schema.Types.ObjectId,
+            ref : 'task'
+        }
+    },{timestamps: true}
+);
+
+module.exports = mongoose.model("Module",moduleSchema)
