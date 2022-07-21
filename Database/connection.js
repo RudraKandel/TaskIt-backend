@@ -6,4 +6,6 @@ const mongoose =require ('mongoose')
     console.log(`connection failed`);
 });
 
+
+
 module.exports=db;

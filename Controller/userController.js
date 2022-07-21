@@ -26,6 +26,7 @@ module.exports.getAll = async (req, res) => {
     if (users.length > 0)
       return res.json({ status: true, users });
     return res.status(404).json({ status: false, msg: 'Users not found' });
+    console.log("hello world");
   }
    
   
