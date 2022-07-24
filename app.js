@@ -9,19 +9,18 @@ const app = express();
 //port
 const port = process.env.PORT || 8765;
 
+//middleware
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
+//database connection
+require('./Database/connection');
 
 //static Files
 //app.use(express.static('images'));
 
-
-//Template engine
-
-console.log("hello");
-
 //router
-
-
-
+app.use(require('./Route/routes/user'));
 
 app.listen(port, () => {
     console.log(`The SERVER has sucessfullly started at port ${port}`);

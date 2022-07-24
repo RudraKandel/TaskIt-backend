@@ -11,4 +11,23 @@ app.use(express.json())  is for the incomming data from the client  the data com
             const express = require('express');
             const route = express.Router()
 
-            
+
+
+
+            ================Controller======================
+             ===show the list of users==
+          ===by using promise====
+
+ const index = (req , res , next) =>{
+     User.find()
+     .then(response =>{
+         res.json({
+             response
+         })
+     })
+     .catch(error =>{
+         res.json({
+            message: 'An error occured'
+         })
+     })
+ }
