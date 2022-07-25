@@ -20,9 +20,21 @@ const taskSchema = new mongoose.Schema(
             'Completed',
         ],
         default:'Assigned'
-    },
+        },
         task_priority : Number,
         task_deadline : Date,
+        user_id :  {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User'
+        },
+        module_id : {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Module'
+        },
+        project_id : {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Project'
+        }
     },{timestamps: true}
 );
 

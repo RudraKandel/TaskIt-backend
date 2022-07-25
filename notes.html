@@ -31,3 +31,23 @@ app.use(express.json())  is for the incomming data from the client  the data com
          })
      })
  }
+
+ //login for users
+module.exports.login =catchAsyncErrors(async (req, res) => {
+  const {email , password} = req.body;
+  //checking if user has entered both email and password
+  if(!email || !password){
+    return res.status(400).json({status:false,  msg:'Enter both email and password'});
+  }
+  const user = await User.findOne({ email });
+  if (!user)
+    return res.status(404).json({ status: false, msg: "email not valid" });
+    console.log(User.password);
+    console.log(password);
+  const verify = await bcrypt.compare(password, User.password);
+  if (!verify)
+    return res
+      .status(404)
+      .json({ status: false, msg: "password is incorrect" });
+  return sendToken(user,202,res);
+});

@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const projectSchema = new mongoose.Schema(
     {
         project_name : String,
-        pm_id : {
+        user_id : {
              type:mongoose.Schema.Types.ObjectId,
             ref:'User'
         },
-        emoployee_id :{
+        role_id :{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
+            ref:'Role'
     }
 },{timestamps: true}
 );

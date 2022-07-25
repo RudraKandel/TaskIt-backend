@@ -10,6 +10,10 @@ const moduleSchema = new Schema(
         task_id : {
             type:mongoose.Schema.Types.ObjectId,
             ref : 'task'
+        },
+        user_id : {
+            type:mongoose.Schema.Types.ObjectId,
+            ref : 'user'
         }
     },{timestamps: true}
 );
