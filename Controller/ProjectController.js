@@ -1,0 +1,77 @@
+//=============================MODULE======================
+//-----------USER MODULE------------
+const Project = require("../Model/ProjectModel");
+
+//To get all the projects
+module.exports.allProjects = async (req, res) => {
+  try {
+    const project = await Project.find();
+    if (project.length > 0)
+      return res
+        .status(200)
+        .json({ status: true, msg: "All the projects", project });
+    return res
+      .status(404)
+      .json({ status: false, msg: "No project in the database" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ status: false, msg: "Error in fetching the project" });
+  }
+};
+//To get a single project by id
+module.exports.singleProject = async (req, res) => {
+  try {
+    project = await Project.findById(req.params.id);
+    if (!project)
+      return res.status(400).json({ status: false, msg: "Project not found" });
+    return res
+      .status(200)
+      .json({ status: true, msg: "Project details", project });
+  } catch (error) {
+    res.status(404).json({ status: false, msg: "Error fetching the project" });
+  }
+};
+
+//add project to database
+module.exports.addProject = async (req, res) => {
+  try {
+    await Project.create(req.body);
+    return res
+      .status(202)
+      .json({ status: true, msg: "Project added sucessfully" });
+  } catch (error) {
+    res.status(400).json({ status: false, msg: " error while adding Project" });
+  }
+};
+
+//update project in database
+module.exports.updateProject = async (req, res) => {
+  try {
+    const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!project)
+      return res
+        .status(400)
+        .json({ status: false, msg: "Project was not found" });
+    return res
+      .status(200)
+      .json({ status: true, msg: "Project updated sucessfully" });
+  } catch (error) {
+    res.status(400).json({ status: false, msg: "Project update failed" });
+  }
+};
+//delete project in data base
+module.exports.deleteProject = async (req, res) => {
+  try {
+    const project = await Project.findByIdAndDelete(req.params.id);
+    if (!project)
+      return res.status(400).json({ status: false, msg: "Project not found" });
+    return res
+      .status(200)
+      .json({ status: true, msg: "Project deleted sucessfully" });
+  } catch (error) {
+    res.status(400).json({ status: false, msg: "Project delete failed" });
+  }
+};

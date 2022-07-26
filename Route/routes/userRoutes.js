@@ -16,6 +16,7 @@ router.get('/get-user/:id',getOne);
 router.put('/update-user/:id',updateUserDetails);
 router.delete('/delete/:id',deleteUser);
 router.post('/password/forgotpassword',forgotPassword );
+router.put('password/reset/:token')
 
 
 module.exports = router;

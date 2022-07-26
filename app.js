@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser= require('body-parser');    //parse json data through our forms
 const exphbs = require('express-handlebars');
+const cookieParser = require('cookie-parser'); 
 
 require('dotenv').config();
 
@@ -20,7 +21,9 @@ require('./Database/connection');
 //app.use(express.static('images'));
 
 //router
-app.use(require('./Route/routes/user'));
+app.use("/user", require('./Route/routes/userRoutes'));
+app.use("/project",require('./Route/routes/projectRoutes'));
+
 
 app.listen(port, () => {
     console.log(`The SERVER has sucessfullly started at port ${port}`);

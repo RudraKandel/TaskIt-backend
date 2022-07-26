@@ -24,8 +24,8 @@ module.exports.getOne = catchAsyncErrors(async (req, res) => {
 });
 
 //to update user by id
-try {
-  module.exports.updateUserDetails = async (req, res) => {
+module.exports.updateUserDetails = async (req, res) => {
+  try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
@@ -33,15 +33,15 @@ try {
       return res.status(404).json({ status: false, msg: "User not found" });
     return res
       .status(202)
-      .json({ status: true, msg: "User updated sucessfully" });
-  };
-} catch (error) {
-  return res.status(404).json({ status: false, msg: "cannot update users" });
-}
+      .json({ status: true, msg: "User updated sucessfully", user });
+  } catch (error) {
+    return res.status(404).json({ status: false, msg: "cannot update users" });
+  }
+};
 
 //to delete user
 module.exports.deleteUser = catchAsyncErrors(async (req, res) => {
-  const user = User.findByIdAndRemove(req.params.id);
+  const user = await User.findByIdAndRemove(req.params.id);
   if (!user)
     return res.status(404).json({ status: false, msg: "User not found" });
   return res
@@ -73,7 +73,7 @@ module.exports.signUp = async (req, res) => {
 };
 
 //login for users
-module.exports.login = catchAsyncErrors(async (req, res) => {
+module.exports.login = async (req, res) => {
   const { email, password } = req.body;
   //checking if user has entered both email and password
   if (!email || !password) {
@@ -84,16 +84,18 @@ module.exports.login = catchAsyncErrors(async (req, res) => {
   const user = await User.findOne({ email }).select("+password");
   if (!user)
     return res.status(404).json({ status: false, msg: "email not valid" });
-  const verify = user.comparePassword(password);
-  if (!verify)
+
+  const verify = await user.comparePassword(password);
+  if (!verify) {
     return res
       .status(404)
       .json({ status: false, msg: "password is incorrect" });
+  }
   return sendToken(user, 202, res);
-});
+};
 
 //forgot password
-exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
+module.exports.forgotPassword = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user)
     return res.status(404).json({ status: false, msg: "Email not found" });
@@ -106,18 +108,19 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   )}/password/reset/${resetToken}`;
   const message = `Your password reset token is  :-  \n\n ${resetPasswordURL}
    \n\n If you havent requested it then, please ignore it`;
-   try {
-      await sendEmail({
-        email:user.email,
-        subject: `Reset password for taskit`,
-        message,
-      });
-      res.status(200).json({status:true,msg:"email send sucessfully"});
-   } catch (error) {
-    user.resetPasswordToken= undefined;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `Reset password for taskit`,
+      message,
+    });
+    res.status(200).json({ status: true, msg: "email send sucessfully" });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });
-    return res.status(500).json({status:false, msg:"Error in resetting password"})
-   }
-
-});
+    return res
+      .status(500)
+      .json({ status: false, msg: "Error in resetting password" });
+  }
+};

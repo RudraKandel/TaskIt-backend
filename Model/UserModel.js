@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 
     designation : {
         type: String,
-        required: [true,'choose any one designation'],
+      //  required: [true,'choose any one designation'],
         enum:[
             'FrontEnd',
             'Backend',
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
     password : {
         type: String,
         required:true,
-        select:false,
+       select:false,
     
     },
      resetPasswordToken: String,
@@ -63,7 +63,7 @@ userSchema.pre("save", async function (next) {
       next();
     }
   
-    this.password = await bcrypt.hash(this.password, process.env.SALT);
+    this.password = await bcrypt.hash(this.password, 10);
   });
   
   // JWT TOKEN
@@ -76,7 +76,8 @@ userSchema.pre("save", async function (next) {
   // Compare Password
   
   userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    const compare = await bcrypt.compare(password, this.password);
+    return compare;
   };
   
   // Generating Password Reset Token
