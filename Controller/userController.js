@@ -129,11 +129,12 @@ module.exports.forgotPassword = async (req, res, next) => {
     });
     res.status(200).json({ status: true, msg: "email send sucessfully" });
   } catch (error) {
-    user.resetPasswordToken = undefined;
+          user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });
     return res
-      .status(500)
+      .status(500)    
+
       .json({ status: false, msg: "Error in resetting password" });
   }
 };
