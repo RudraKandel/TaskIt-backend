@@ -11,16 +11,28 @@ const sendEmail = require("../utils/sendEmail");
 
 //to get all the users
 module.exports.getAll = catchAsyncErrors(async (req, res) => {
-  const users = await User.find();
-  if (users.length > 0) return res.json({ status: true, users });
-  return res.status(404).json({ status: false, msg: "Users not found" });
+  try {
+    const users = await User.find();
+    if (users.length > 0) return res.json({ status: true, users });
+    return res.status(404).json({ status: false, msg: "Users not found" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ status: false, msg: "Error getting all users" });
+  }
 });
 
 //to get a single user by id
 module.exports.getOne = catchAsyncErrors(async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (user) return res.json({ status: true, user });
-  return res.status(404).json({ status: false, msg: "User not found" });
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) return res.json({ status: true, user });
+    return res.status(404).json({ status: false, msg: "User not found" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ status: false, msg: "Error getting the required users" });
+  }
 });
 
 //to update user by id
@@ -35,18 +47,24 @@ module.exports.updateUserDetails = async (req, res) => {
       .status(202)
       .json({ status: true, msg: "User updated sucessfully", user });
   } catch (error) {
-    return res.status(404).json({ status: false, msg: "cannot update users" });
+    return res.status(404).json({ status: false, msg: "Error updating users" });
   }
 };
 
 //to delete user
 module.exports.deleteUser = catchAsyncErrors(async (req, res) => {
-  const user = await User.findByIdAndRemove(req.params.id);
-  if (!user)
-    return res.status(404).json({ status: false, msg: "User not found" });
-  return res
-    .status(202)
-    .json({ status: true, msg: "User Deleted Sucessfully" });
+  try {
+    const user = await User.findByIdAndRemove(req.params.id);
+    if (!user)
+      return res.status(404).json({ status: false, msg: "User not found" });
+    return res
+      .status(202)
+      .json({ status: true, msg: "User Deleted Sucessfully" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ status: false, msg: "Error getting all users" });
+  }
 });
 
 //to add user from signup
@@ -75,17 +93,12 @@ module.exports.signUp = async (req, res) => {
 //login for users
 module.exports.login = async (req, res) => {
   const { email, password } = req.body;
-  //checking if user has entered both email and password
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ status: false, msg: "Enter both email and password" });
-  }
+
   const user = await User.findOne({ email }).select("+password");
   if (!user)
     return res.status(404).json({ status: false, msg: "email not valid" });
-
-  const verify = await user.comparePassword(password);
+  console.log(password, user.password);
+  const verify = bcrypt.compare(password, user.password);
   if (!verify) {
     return res
       .status(404)
