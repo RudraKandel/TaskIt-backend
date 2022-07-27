@@ -5,12 +5,11 @@ const bcrypt = require("bcrypt");
 
 //user module
 const User = require("../Model/UserModel");
-const catchAsyncErrors = require("../Middleware/catchAsyncError");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
 
 //to get all the users
-module.exports.getAll = catchAsyncErrors(async (req, res) => {
+module.exports.getAll = async (req, res) => {
   try {
     const users = await User.find();
     if (users.length > 0) return res.json({ status: true, users });
@@ -20,10 +19,10 @@ module.exports.getAll = catchAsyncErrors(async (req, res) => {
       .status(400)
       .json({ status: false, msg: "Error getting all users" });
   }
-});
+};
 
 //to get a single user by id
-module.exports.getOne = catchAsyncErrors(async (req, res) => {
+module.exports.getOne = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (user) return res.json({ status: true, user });
@@ -33,7 +32,7 @@ module.exports.getOne = catchAsyncErrors(async (req, res) => {
       .status(400)
       .json({ status: false, msg: "Error getting the required users" });
   }
-});
+};
 
 //to update user by id
 module.exports.updateUserDetails = async (req, res) => {
@@ -52,7 +51,7 @@ module.exports.updateUserDetails = async (req, res) => {
 };
 
 //to delete user
-module.exports.deleteUser = catchAsyncErrors(async (req, res) => {
+module.exports.deleteUser =async (req, res) => {
   try {
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user)
@@ -65,7 +64,7 @@ module.exports.deleteUser = catchAsyncErrors(async (req, res) => {
       .status(400)
       .json({ status: false, msg: "Error getting all users" });
   }
-});
+};
 
 //to add user from signup
 module.exports.signUp = async (req, res) => {

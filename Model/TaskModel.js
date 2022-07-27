@@ -21,7 +21,7 @@ const taskSchema = new mongoose.Schema(
         ],
         default:'Assigned'
         },
-        task_priority : Number,
+      // task_priority : Number,
         task_deadline : Date,
         user_id :  {
             type:mongoose.Schema.Types.ObjectId,

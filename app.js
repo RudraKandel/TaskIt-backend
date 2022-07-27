@@ -23,6 +23,7 @@ require('./Database/connection');
 //router
 app.use("/user", require('./Route/routes/userRoutes'));
 app.use("/project",require('./Route/routes/projectRoutes'));
+app.use("task",require('./Route/routes/taskRoutes'));
 
 
 app.listen(port, () => {
