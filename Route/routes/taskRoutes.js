@@ -6,7 +6,7 @@ const {getAllTasks,getOneTask,createTask,updateTask,deleteTask}  = require("../.
 
 router.get("/getalltasks",getAllTasks);
 router.get("/getOneTask",getOneTask);
-route.post("/createTask",createTask);
+router.post("/createTask",createTask);
 router.put("/updateTask",updateTask);
 router.delete("/deleteTask",deleteTask);
 

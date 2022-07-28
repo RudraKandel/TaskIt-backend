@@ -1,12 +1,12 @@
 //==========MODULE==========
 //-------third party module
-const _ = require("loadash")
+const _ = require("lodash")
 //--------USER MODULE----------
 const { model } = require("mongoose");
 const Task = require("../Model/TaskModel");
 
 //get all tasks
-model.exports.getAllTasks = async (req, res) => {
+module.exports.getAllTasks = async (req, res) => {
   try {
     const task = await Task.find();
     if (task.length < 0)
@@ -20,7 +20,7 @@ model.exports.getAllTasks = async (req, res) => {
 };
 
 //get a single task by id
-model.exports.getOneTask = async (req, res) => {
+module.exports.getOneTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if(!task)
@@ -32,7 +32,7 @@ model.exports.getOneTask = async (req, res) => {
 };
 
 //create a task
-model.exports.createTask = (req,res) =>{
+module.exports.createTask = async (req,res) =>{
   try {
     const task = await Task.create(
       _.pick(req.body ,[
