@@ -4,8 +4,8 @@ const roleSchema = new mongoose.Schema(
     {
         role :{
             type: String,
-            enum : ['Employee','PM']
-        }
+           required:[true,'please enter a role'],
+        },
     },{timestamps: true}
 );
 

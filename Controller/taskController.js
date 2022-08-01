@@ -2,7 +2,6 @@
 //-------third party module
 const _ = require("lodash")
 //--------USER MODULE----------
-const { model } = require("mongoose");
 const Task = require("../Model/TaskModel");
 
 //get all tasks

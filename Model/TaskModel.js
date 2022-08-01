@@ -22,14 +22,13 @@ const taskSchema = new mongoose.Schema(
         default:'Assigned'
         },
       // task_priority : Number,
-        task_deadline : Date,
+        task_deadline : {
+            type: Date,
+            required:[true,'Enter task deadline']
+        },
         user_id :  {
             type:mongoose.Schema.Types.ObjectId,
             ref:'User'
-        },
-        module_id : {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Module'
         },
         project_id : {
             type:mongoose.Schema.Types.ObjectId,
