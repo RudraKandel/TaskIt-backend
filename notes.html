@@ -1,0 +1,53 @@
+==============================Middleware=======================
+
+app.use(express.json())  is for the incomming data from the client  the data comes in json format which is not
+                        understood by server   it converts the json  to object
+                        : used for parsing data from form to backend
+
+
+            ==================Router========================
+            const router = require('express').Router();
+            //or avove statement can be written as 
+            const express = require('express');
+            const route = express.Router()
+
+
+
+
+            ================Controller======================
+             ===show the list of users==
+          ===by using promise====
+
+ const index = (req , res , next) =>{
+     User.find()
+     .then(response =>{
+         res.json({
+             response
+         })
+     })
+     .catch(error =>{
+         res.json({
+            message: 'An error occured'
+         })
+     })
+ }
+
+ //login for users
+module.exports.login =catchAsyncErrors(async (req, res) => {
+  const {email , password} = req.body;
+  //checking if user has entered both email and password
+  if(!email || !password){
+    return res.status(400).json({status:false,  msg:'Enter both email and password'});
+  }
+  const user = await User.findOne({ email });
+  if (!user)
+    return res.status(404).json({ status: false, msg: "email not valid" });
+    console.log(User.password);
+    console.log(password);
+  const verify = await bcrypt.compare(password, User.password);
+  if (!verify)
+    return res
+      .status(404)
+      .json({ status: false, msg: "password is incorrect" });
+  return sendToken(user,202,res);
+});
