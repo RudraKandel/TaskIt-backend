@@ -8,7 +8,7 @@ module.exports.getAllRoles = async (req, res) => {
     const role = await Role.find();
     if (!role)
       return res.status(404).json({ status: false, msg: "No roles found" });
-    return res.status(200).json({ status: true, msg: "Roles found" }, role);
+    return res.status(200).json({ status: true, msg: "Roles found" , role});
   } catch (error) {
     return res.status(500).json({ status: false, msg: "Error getting roles" });
   }
@@ -20,7 +20,7 @@ module.exports.getOneRole = async (req, res) => {
     const role = await Role.findById(req.params.id);
     if (!role)
       return res.status(404).json({ status: false, msg: "Role not found" });
-    return res.status(200).json({ status: true, msg: "Roles found" }, role);
+    return res.status(200).json({ status: true, msg: "Roles found" , role});
   } catch (error) {
     return res.status(500).json({ status: false, msg: "Error getting roles" });
   }
@@ -57,7 +57,7 @@ module.exports.addRole = async (req, res) => {
 //delete role
 module.exports.deleteRole = async (req, res) => {
   try {
-    const role = await Role.findByIdAndRemove(req.params.id);
+     await Role.findByIdAndRemove(req.params.id);
     if (!task)
       return res.status(400).json({ status: false, msg: "Role not found" });
     return res

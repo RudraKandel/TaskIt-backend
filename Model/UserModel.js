@@ -24,13 +24,13 @@ const userSchema = new mongoose.Schema(
     designation: {
       type: String,
       //  required: [true,'choose any one designation'],
-      enum: [
-        "FrontEnd",
-        "Backend",
-        "UI/UX Designer",
-        "QA",
-        "Full Stack Developer",
-      ],
+      // enum: [
+      //   "FrontEnd",
+      //   "Backend",
+      //   "UI/UX Designer",
+      //   "QA",
+      //   "Full Stack Developer",
+      // ],
     },
 
     isEmailVerified: {
@@ -38,8 +38,9 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
-    user_name: {
+    phoneNumber: {
       type: String,
+      required: [true, "Enter your phone Number"],
       unique: true,
     },
     password: {

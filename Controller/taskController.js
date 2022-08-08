@@ -12,7 +12,7 @@ module.exports.getAllTasks = async (req, res) => {
       return res
         .status(400)
         .json({ status: false, msg: "No task of the project" });
-    return res.status(200).json({ status: true, msg });
+    return res.status(200).json({ status: true, msg:'The tasks are', task });
   } catch (error) {
     return res.status(500).json({ status: false, msg: "Error getting task" });
   }

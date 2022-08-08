@@ -14,4 +14,4 @@ const PMember = new mongoose.Schema(
     },{timestamps:true}
 );
 
-module.exports = mongoose.Model("ProjectMember",PMember);
+module.exports = mongoose.model("ProjectMember",PMember);

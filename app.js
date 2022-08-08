@@ -26,6 +26,10 @@ app.use(cors());
 app.use("/user", require('./Route/routes/userRoutes'));
 app.use("/project",require('./Route/routes/projectRoutes'));
 app.use("/task",require('./Route/routes/taskRoutes'));
+app.use("/role",require('./Route/routes/roleRoutes'));
+app.use("/projectmember",require('./Route/routes/ProjectMemberRoutes'));
+
+
 
 
 app.listen(port, () => {

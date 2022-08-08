@@ -76,7 +76,7 @@ module.exports.signUp = async (req, res) => {
         "firstName",
         "lastName",
         "email",
-        "user_name",
+        "phoneNumber",
         "designation",
         "password",
       ])
