@@ -15,21 +15,21 @@ module.exports.allProjects = async (req, res) => {
       .json({ status: false, msg: "No project in the database" });
   } catch (error) {
     return res
-      .status(400)
+      .status(500)
       .json({ status: false, msg: "Error in fetching the project" });
   }
 };
 //To get a single project by id
 module.exports.singleProject = async (req, res) => {
   try {
-    project = await Project.findById(req.params.id);
+   const project = await Project.findById(req.params.id);
     if (!project)
       return res.status(400).json({ status: false, msg: "Project not found" });
     return res
       .status(200)
       .json({ status: true, msg: "Project details", project });
   } catch (error) {
-    res.status(404).json({ status: false, msg: "Error fetching the project" });
+    res.status(504).json({ status: false, msg: "Error fetching the project" });
   }
 };
 
@@ -41,7 +41,7 @@ module.exports.addProject = async (req, res) => {
       .status(202)
       .json({ status: true, msg: "Project added sucessfully" });
   } catch (error) {
-    res.status(400).json({ status: false, msg: " error while adding Project" });
+    res.status(500).json({ status: false, msg: " error while adding Project" });
   }
 };
 
@@ -59,7 +59,7 @@ module.exports.updateProject = async (req, res) => {
       .status(200)
       .json({ status: true, msg: "Project updated sucessfully" });
   } catch (error) {
-    res.status(400).json({ status: false, msg: "Project update failed" });
+    res.status(500).json({ status: false, msg: "Project update failed" });
   }
 };
 //delete project in data base
@@ -72,6 +72,6 @@ module.exports.deleteProject = async (req, res) => {
       .status(200)
       .json({ status: true, msg: "Project deleted sucessfully" });
   } catch (error) {
-    res.status(400).json({ status: false, msg: "Project delete failed" });
+    res.status(500).json({ status: false, msg: "Project delete failed" });
   }
 };

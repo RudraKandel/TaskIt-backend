@@ -25,7 +25,7 @@ app.use(cors());
 //router
 app.use("/user", require('./Route/routes/userRoutes'));
 app.use("/project",require('./Route/routes/projectRoutes'));
-app.use("task",require('./Route/routes/taskRoutes'));
+app.use("/task",require('./Route/routes/taskRoutes'));
 
 
 app.listen(port, () => {

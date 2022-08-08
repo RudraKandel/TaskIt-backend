@@ -94,13 +94,13 @@ module.exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select("+password");
+  console.log(user);
   if (!user)
     return res.status(404).json({ status: false, msg: "email not valid" });
-  console.log(password, user.password);
-  const verify = bcrypt.compare(password, user.password);
+  const verify = await bcrypt.compare(password, user.password);
   if (!verify) {
     return res
-      .status(404)
+      .status(401)
       .json({ status: false, msg: "password is incorrect" });
   }
   return sendToken(user, 202, res);

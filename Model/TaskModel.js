@@ -24,7 +24,7 @@ const taskSchema = new mongoose.Schema(
       // task_priority : Number,
         task_deadline : {
             type: Date,
-            required:[true,'Enter task deadline']
+            required:[true,'Enter task deadline'],
         },
         user_id :  {
             type:mongoose.Schema.Types.ObjectId,
