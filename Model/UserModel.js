@@ -48,6 +48,18 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    image: [
+      {
+        public_id: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     role_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
@@ -68,7 +80,7 @@ userSchema.pre("save", async function (next) {
 
 // JWT TOKEN
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_KEY, {
+  return jwt.sign({ id: this._id ,role: this.role}, process.env.JWT_KEY, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };

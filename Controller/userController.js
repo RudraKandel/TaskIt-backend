@@ -2,6 +2,8 @@
 //third party
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const cloudinary= require("cloudinary");
 
 //user module
 const User = require("../Model/UserModel");
@@ -37,6 +39,25 @@ module.exports.getOne = async (req, res) => {
 //to update user by id
 module.exports.updateUserDetails = async (req, res) => {
   try {
+    //to add image
+    if (req.body.image !== "") {
+      const user = await User.findById(req.user.id);
+  
+      const imageId = user.image.public_id;
+  
+      await cloudinary.v2.uploader.destroy(imageId);
+  
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
+        folder: "userImages",
+        width: 150,
+        crop: "scale",
+      });
+  
+      req.body.image = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    }
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
@@ -51,7 +72,7 @@ module.exports.updateUserDetails = async (req, res) => {
 };
 
 //to delete user
-module.exports.deleteUser =async (req, res) => {
+module.exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user)
@@ -107,7 +128,7 @@ module.exports.login = async (req, res) => {
 };
 
 //forgot password
-module.exports.forgotPassword = async (req, res, next) => {
+module.exports.forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user)
     return res.status(404).json({ status: false, msg: "Email not found" });
@@ -128,12 +149,73 @@ module.exports.forgotPassword = async (req, res, next) => {
     });
     res.status(200).json({ status: true, msg: "email send sucessfully" });
   } catch (error) {
-          user.resetPasswordToken = undefined;
+    user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });
     return res
-      .status(500)    
+      .status(500)
 
       .json({ status: false, msg: "Error in resetting password" });
+  }
+};
+
+//reset password
+exports.resetPassword = async (req, res, next) => {
+  // creating token hash
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({
+        status: false,
+        msg: "Reset Password Token is invalid or has been expired"
+      });
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return res.status(400).json({status:false,msg:"Password does not match password"});
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  return sendToken(user, 200, res);
+};
+
+// update User password
+exports.updatePassword = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select("+password");
+  
+    const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+  
+    if (!isPasswordMatched) {
+      return res.status(400).json({status:false,msg:"Old password is incorrect"});
+    }
+  
+    if (req.body.newPassword !== req.body.confirmPassword) {
+      return res.status(400).json({status:false,msg:"Password donot match with each other"});
+    }
+  
+    user.password = req.body.newPassword;
+  
+    await user.save();
+  
+    sendToken(user, 200, res);
+    
+  } catch (error) {
+    return res.status(500).json({status:false,msg:"Error in resetting password"});
   }
 };
