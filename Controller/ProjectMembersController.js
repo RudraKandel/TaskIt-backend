@@ -5,11 +5,12 @@ const ProjectMember = require('../Model/ProjectMemberModel');
 //get all project members
 module.exports.getaAllProjectMembers = async (req, res) => {
     try {
-      const projectmember = await ProjectMember.find();
-      if (!projectmember)
-        return res.status(404).json({ status: false, msg: "No project members found" });
-      return res.status(200).json({ status: true, msg: "project members found" }, projectmember);
+      const projectmembers = await ProjectMember.find({project:req.params.id});
+      if(projectmembers.length>0)
+      return res.status(200).json({ status: true, msg: "project members found" , projectmembers});
+      return res.status(400).json({status:false,msg:"Project members not found"});
     } catch (error) {
+
       return res.status(500).json({ status: false, msg: "Error getting projectmembers" });
     }
   };
@@ -20,7 +21,7 @@ module.exports.getaAllProjectMembers = async (req, res) => {
       const projectmember = await ProjectMember.findById(req.params.id);
       if (!projectmember)
         return res.status(404).json({ status: false, msg: "Project Member not found" });
-      return res.status(200).json({ status: true, msg: "Project Members found" }, projectmember);
+      return res.status(200).json({ status: true, msg: "Project Members found" , projectmember});
     } catch (error) {
       return res.status(500).json({ status: false, msg: "Error getting Project Members" });
     }
@@ -44,11 +45,24 @@ module.exports.getaAllProjectMembers = async (req, res) => {
   //create projectmembers
   module.exports.addProjectMember = async (req, res) => {
     try {
+      const {developer,project}=req.body;
+      const checkExistingMember = await ProjectMember.findOne({developer,project})
+      if(checkExistingMember){
+        return res.status(400).json({status:false,msg:"Already in another project"});
+      }
       const projectmember = await ProjectMember.create(req.body);
       return res
         .status(200)
         .json({ status: true, msg: "projectmember created sucessfully" });
     } catch (error) {
+      if(error.errors){
+        let newError={};
+        Object.keys(error.errors).map(key=>{
+          newError[key]=error.errors[key].message
+        });
+        return res.status(500).json({status:false,error:newError});
+      }
+      else
       return res
         .status(500)
         .json({ status: false, msg: "Error  adding the projectmember" });

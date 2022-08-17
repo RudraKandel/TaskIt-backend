@@ -12,25 +12,17 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: [true, "please addd your last name"],
+      required: [true, "please add your last name"],
     },
     email: {
       type: String,
       required: [true, "please enter you valid email"],
-      unique: true,
       validate: [validator.isEmail, "please enter a valid email"],
+      unique: [ true,'Email must be unique'],
     },
 
     designation: {
       type: String,
-      //  required: [true,'choose any one designation'],
-      // enum: [
-      //   "FrontEnd",
-      //   "Backend",
-      //   "UI/UX Designer",
-      //   "QA",
-      //   "Full Stack Developer",
-      // ],
     },
 
     isEmailVerified: {

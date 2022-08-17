@@ -1,19 +1,33 @@
 //=============================MODULE======================
 //-----------USER MODULE------------
 const Project = require("../Model/ProjectModel");
+const ProjectMember = require("../Model/ProjectMemberModel");
 
 //To get all the projects
 module.exports.allProjects = async (req, res) => {
   try {
-    const project = await Project.find();
-    if (project.length > 0)
+    const { role, id } = req.user;
+    let projects = [];
+    if (role == "user") {
+      let projectIds = [];
+      const developerProjects = await ProjectMember.find({ developer: id });
+      developerProjects.forEach((developerProject) => {
+        projectIds.push(developerProject.project_id);
+      });
+      if(projectIds.length>0)
+        projects=await Project.find({_id:{$in:projectIds}});
+    } 
+    else
+     projects = await Project.find();
+    if (projects.length > 0)
       return res
         .status(200)
-        .json({ status: true, msg: "All the projects", project });
+        .json({ status: true, msg: "All the projects", projects });
     return res
       .status(404)
       .json({ status: false, msg: "No project in the database" });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ status: false, msg: "Error in fetching the project" });
@@ -22,7 +36,7 @@ module.exports.allProjects = async (req, res) => {
 //To get a single project by id
 module.exports.singleProject = async (req, res) => {
   try {
-   const project = await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id);
     if (!project)
       return res.status(400).json({ status: false, msg: "Project not found" });
     return res

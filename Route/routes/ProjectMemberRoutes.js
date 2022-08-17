@@ -3,14 +3,15 @@
 const router = require("express").Router();
 //-----USER MODULE----------
 const {
-getaAllProjectMembers,getOneProjectMember,updateProjectMember,deleteProjectMember,addProjectMember
+getaAllProjectMembers,getOneProjectMember,updateProjectMember,
+deleteProjectMember,addProjectMember
 } = require("../../Controller/ProjectMembersController");
 
 //Routes
-router.get("/getAllRoles", getaAllProjectMembers);
-router.get("/getOneRole/:id", getOneProjectMember);
-router.post("/addRole", addProjectMember);
-router.put("/updateRole/:id", updateProjectMember);
-router.delete("/deleteRole/:id",deleteProjectMember);
+router.get("/getAllProjectMembers/:id", getaAllProjectMembers);
+router.get("/getOneProjectMember/:id", getOneProjectMember);
+router.post("/addProjectMember", addProjectMember);
+router.put("/updateProjectMember/:id", updateProjectMember);
+router.delete("/deleteProjectMember/:id",deleteProjectMember);
 
 module.exports = router;

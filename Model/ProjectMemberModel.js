@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 
 const PMember = new mongoose.Schema(
     {
-        project_id:{
+        project:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Project'
+            ref:'Project',
+            required:true
         },
-        developer_id:{
+        developer:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
+            ref:'User',
+            required:true,
         }
 
     },{timestamps:true}
