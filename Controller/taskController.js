@@ -7,19 +7,17 @@ const Task = require("../Model/TaskModel");
 //get all tasks
 module.exports.getAllTasks = async (req, res) => {
   try {
-    const {role,id} = req.user;
-    tasks =[];
-    if(role=="user"){
-      let taskIds = [];
-      const developerTasks = await Task.find({developer: id});
-
-    }
-    const task = await Task.find();
-    if (task.length < 0)
+    const { role, id } = req.user;
+    let tasks = [];
+    if (role == "user") {
+       tasks = await Task.find({ user_id: id });
+    } 
+    else tasks = await Task.find();
+    if (tasks.length < 0)
       return res
         .status(400)
         .json({ status: false, msg: "No task of the project" });
-    return res.status(200).json({ status: true, msg:'The tasks are', task });
+    return res.status(200).json({ status: true, msg: "The tasks are", tasks });
   } catch (error) {
     return res.status(500).json({ status: false, msg: "Error getting task" });
   }
@@ -93,10 +91,10 @@ module.exports.deleteTask = async (req, res) => {
 };
 
 //get task for user from user id
-module.exports.getATask = async (req,res) =>{
-  const {userid} = req.body;
-  const user_id = await Task.find({userid});
+module.exports.getATask = async (req, res) => {
+  const { userid } = req.body;
+  const user_id = await Task.find({ userid });
   if (!user_id)
     return res.status(400).json({ status: false, msg: " not found" });
   console.log(user_id);
-}
+};

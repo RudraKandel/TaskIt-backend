@@ -3,9 +3,11 @@
 const router = require("express").Router();
 //USER MODULES
 const {getAllTasks,getOneTask,createTask,updateTask,deleteTask,getATask}  = require("../../Controller/TaskController");
+const {authentication} = require("../../Middleware/auth");
 
-router.get("/getalltasks",getAllTasks);
-router.get("/getOneTask/:id",getOneTask);
+router.get("/getalltasks",[authentication],getAllTasks);
+router.get("/getOneTask/:id",[authentication],getOneTask);
+
 router.post("/createTask",createTask);
 router.put("/updateTask/:id",updateTask);
 router.delete("/deleteTask/:id",deleteTask);

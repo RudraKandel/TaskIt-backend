@@ -6,7 +6,6 @@ const ProjectMember = require("../Model/ProjectMemberModel");
 //To get all the projects
 module.exports.allProjects = async (req, res) => {
   try {
-    console.log(req.user);
     const { role, id } = req.user;
     let projects = [];
     if (role == "user") {
@@ -19,7 +18,7 @@ module.exports.allProjects = async (req, res) => {
         projects=await Project.find({_id:{$in:projectIds}});
     } 
     else
-     projects = await Project.find();
+     projects = await Project.find().populate('user');
     if (projects.length > 0)
       return res
         .status(200)

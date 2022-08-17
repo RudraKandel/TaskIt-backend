@@ -13,6 +13,7 @@ const {authentication} = require("../../Middleware/auth");
 //Routes
 router.get("/getall",[authentication] , allProjects);
 router.get("/getOne/:id", singleProject);
+//admin
 router.post("/addproject", addProject);
 router.put("/updateProject/:id", updateProject);
 router.delete("/deleteProject/:id",deleteProject);

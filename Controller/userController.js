@@ -164,7 +164,7 @@ module.exports.forgotPassword = async (req, res) => {
 };
 
 //reset password
-exports.resetPassword = async (req, res, next) => {
+module.exports.resetPassword = async (req, res, next) => {
   // creating token hash
   const resetPasswordToken = crypto
     .createHash("sha256")
@@ -199,7 +199,7 @@ exports.resetPassword = async (req, res, next) => {
 };
 
 // update User password
-exports.updatePassword = async (req, res, next) => {
+module.exports.updatePassword = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("+password");
   
@@ -221,5 +221,22 @@ exports.updatePassword = async (req, res, next) => {
     
   } catch (error) {
     return res.status(500).json({status:false,msg:"Error in resetting password"});
+  }
+};
+
+//update user role
+module.exports.updateRole = async (req,res) => {
+  try {
+    const {role}= req.body;
+    const user = await User.findByIdAndUpdate(req.params.id, role, {
+      new: true,
+    });
+    if (!user)
+      return res.status(404).json({ status: false, msg: "User not found" });
+    return res
+      .status(202)
+      .json({ status: true, msg: "User Role updated sucessfully", user });
+  } catch (error) {
+    return res.status(404).json({ status: false, msg: "Error updating roles" });
   }
 };

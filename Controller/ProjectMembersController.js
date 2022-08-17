@@ -3,7 +3,7 @@
 const ProjectMember = require('../Model/ProjectMemberModel');
     
 //get all project members
-module.exports.getaAllProjectMembers = async (req, res) => {
+module.exports.getAllProjectMembers = async (req, res) => {
     try {
       const projectmembers = await ProjectMember.find({project:req.params.id});
       if(projectmembers.length>0)
