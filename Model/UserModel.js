@@ -55,6 +55,7 @@ const userSchema = new mongoose.Schema(
     role_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
+      required: true,
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -72,7 +73,7 @@ userSchema.pre("save", async function (next) {
 
 // JWT TOKEN
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id ,role: this.role}, process.env.JWT_KEY, {
+  return jwt.sign({ id: this._id ,role: this.role_id.role}, process.env.JWT_KEY, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };

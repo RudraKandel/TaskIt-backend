@@ -11,6 +11,17 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add project description"],
     },
+    project_status: {
+      type: String,
+      enum: {
+          values: [
+              "completed",
+              "in-progress",
+              "pending",
+          ],
+      },
+      default:"pending",
+    },
     project_deadline: {
       type: Date,
     },

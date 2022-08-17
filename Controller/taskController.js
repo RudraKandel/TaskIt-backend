@@ -7,7 +7,14 @@ const Task = require("../Model/TaskModel");
 //get all tasks
 module.exports.getAllTasks = async (req, res) => {
   try {
-    const task = await Task.find({project:req.params.id});
+    const {role,id} = req.user;
+    tasks =[];
+    if(role=="user"){
+      let taskIds = [];
+      const developerTasks = await Task.find({developer: id});
+
+    }
+    const task = await Task.find();
     if (task.length < 0)
       return res
         .status(400)

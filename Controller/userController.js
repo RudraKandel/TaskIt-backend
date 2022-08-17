@@ -9,6 +9,7 @@ const cloudinary= require("cloudinary");
 const User = require("../Model/UserModel");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
+const RoleModel = require("../Model/RoleModel");
 
 //to get all the users
 module.exports.getAll = async (req, res) => {
@@ -90,18 +91,22 @@ module.exports.deleteUser = async (req, res) => {
 //to add user from signup
 module.exports.signUp = async (req, res) => {
   try {
-    // const salt = await bcrypt.genSalt(process.env.SALT);
-    // req.body.password = await bcrypt.hash(req.body.password, salt);
-    const user = await User.create(
-      _.pick(req.body, [
-        "firstName",
-        "lastName",
-        "email",
-        "phoneNumber",
-        "designation",
-        "password",
-      ])
-    );
+    // CHECKING IF THE USER ROLE EXISTS OR NOT
+    let checkRole=await RoleModel.findOne({role:'user'});
+    if(!checkRole)
+      checkRole =await RoleModel.create({role:'user'}); 
+    
+    let datas=_.pick(req.body, [
+      "firstName",
+      "lastName",
+      "email",
+      "phoneNumber",
+      "designation",
+      "password",
+    ]);
+    datas.role_id=checkRole._id;
+
+    const user = await User.create(datas);
     return sendToken(user, 201, res);
     // return res.json({ status: true, msg: "New user added sucessfully" });
   } catch (error) {
@@ -114,8 +119,7 @@ module.exports.signUp = async (req, res) => {
 module.exports.login = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select("+password");
-  console.log(user);
+  const user = await User.findOne({ email }).select("+password").populate('role_id');
   if (!user)
     return res.status(404).json({ status: false, msg: "email not valid" });
   const verify = await bcrypt.compare(password, user.password);
