@@ -1,6 +1,7 @@
 //==========MODULE==========
 //-------third party module
 const _ = require("lodash");
+const { findByIdAndUpdate } = require("../Model/TaskModel");
 //--------USER MODULE----------
 const Task = require("../Model/TaskModel");
 
@@ -9,7 +10,7 @@ module.exports.getAllTasks = async (req, res) => {
   try {
     const { role, id } = req.user;
     let tasks = [];
-    if (role == "user") {
+    if (role == "user" || role == "pm") {
        tasks = await Task.find({ user_id: id });
     } 
     else tasks = await Task.find();
@@ -97,4 +98,13 @@ module.exports.getATask = async (req, res) => {
   if (!user_id)
     return res.status(400).json({ status: false, msg: " not found" });
   console.log(user_id);
+};
+
+//change status of the task
+module.exports.changeStatus = async(req,res) =>{
+  try {
+    const changedStatus = await findByIdAndUpdate(req.body,)
+  } catch (error) {
+    
+  }
 };

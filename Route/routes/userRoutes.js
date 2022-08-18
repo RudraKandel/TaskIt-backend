@@ -11,7 +11,7 @@ router.post('/login', login);
 router.post('/password/forgotpassword',forgotPassword );
 router.put('/password/reset/:token',resetPassword);
 router.put('/password/update',[authentication],updatePassword);
-router.put('/update-user/:id',[authentication],updateUserDetails);
+router.put('/update-user',[authentication],updateUserDetails);
 
 //by admin
 router.put('/update-roles',updateRole);

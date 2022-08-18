@@ -8,7 +8,7 @@ module.exports.allProjects = async (req, res) => {
   try {
     const { role, id } = req.user;
     let projects = [];
-    if (role == "user") {
+    if (role == "user" || role == "pm") {
       let projectIds = [];
       const developerProjects = await ProjectMember.find({ developer: id });
       developerProjects.forEach((developerProject) => {

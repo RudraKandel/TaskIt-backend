@@ -42,7 +42,7 @@ module.exports.getAllProjectMembers = async (req, res) => {
       return res.status(500).json({ status: false, msg: "Error updating Project members" });
     }
   };
-  //create projectmembers
+  //add projectmembers
   module.exports.addProjectMember = async (req, res) => {
     try {
       const {developer,project}=req.body;

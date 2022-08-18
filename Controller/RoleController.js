@@ -69,3 +69,5 @@ module.exports.deleteRole = async (req, res) => {
       .json({ status: false, msg: "Error deleting the role" });
   }
 };
+
+
