@@ -228,7 +228,7 @@ module.exports.updatePassword = async (req, res) => {
 module.exports.updateRole = async (req,res) => {
   try {
     const {role}= req.body;
-    const user = await User.findByIdAndUpdate(req.params.id, role, {
+    const user = await User.findByIdAndUpdate(req.params.id, {role}, {
       new: true,
     });
     if (!user)

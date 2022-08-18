@@ -6,19 +6,27 @@ const ProjectMember = require("../Model/ProjectMemberModel");
 //To get all the projects
 module.exports.allProjects = async (req, res) => {
   try {
+    let condition = {};
+    const { status } = req.query;
+    if (status) condition.status = status;
+
     const { role, id } = req.user;
     let projects = [];
     if (role == "user" || role == "pm") {
       let projectIds = [];
-      const developerProjects = await ProjectMember.find({ developer: id });
+      const developerProjects = await ProjectMember.find({
+        developer: id,
+        ...condition,
+      }).populate();
       developerProjects.forEach((developerProject) => {
         projectIds.push(developerProject.project);
       });
-      if(projectIds.length>0)
-        projects=await Project.find({_id:{$in:projectIds}});
-    } 
-    else
-     projects = await Project.find().populate('user');
+      if (projectIds.length > 0)
+        projects = await Project.find({
+          _id: { $in: projectIds },
+          ...condition,
+        }).populate("user");
+    } else projects = await Project.find().populate("user");
     if (projects.length > 0)
       return res
         .status(200)
@@ -50,6 +58,7 @@ module.exports.singleProject = async (req, res) => {
 //add project to database
 module.exports.addProject = async (req, res) => {
   try {
+    req.body.project_manager =req.body.id;
     await Project.create(req.body);
     return res
       .status(202)
