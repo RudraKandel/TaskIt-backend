@@ -5,12 +5,18 @@ const ProjectMember = require('../Model/ProjectMemberModel');
 //get all project members
 module.exports.getAllProjectMembers = async (req, res) => {
     try {
-      const projectmembers = await ProjectMember.find({project:req.params.id});
-      if(projectmembers.length>0)
-      return res.status(200).json({ status: true, msg: "project members found" , projectmembers});
-      return res.status(400).json({status:false,msg:"Project members not found"});
+     let projectIds =[];
+      const developerProjects = await ProjectMember.find({developer: req.user.id});
+      developerProjects.forEach((developerProject) => {
+        projectIds.push(developerProject.project);
+      });
+      if(projectIds.length>0){
+      const developers = await  ProjectMember.find({project: {$in:projectIds}}).populate('developer');
+       return res.status(200).json({ status: true, msg: "project members found" , developers});
+      }
+      return res.status(400).json({status:false,msg:"No team members found"});
     } catch (error) {
-
+      console.log(error);
       return res.status(500).json({ status: false, msg: "Error getting projectmembers" });
     }
   };

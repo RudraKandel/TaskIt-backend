@@ -12,11 +12,11 @@ router.post('/password/forgotpassword',forgotPassword );
 router.put('/password/reset/:token',resetPassword);
 router.put('/password/update',[authentication],updatePassword);
 router.put('/update-user',[authentication],updateUserDetails);
+router.get('/get-user',[authentication],getOne);
 
 //by admin
 router.put('/update-roles',updateRole);
 router.get('/getall-users', getAll);
-router.get('/get-user/:id',getOne);
 router.delete('/delete/:id',deleteUser);
 
 module.exports = router;

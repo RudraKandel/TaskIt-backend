@@ -27,7 +27,7 @@ module.exports.getAll = async (req, res) => {
 //to get a single user by id
 module.exports.getOne = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user.id);
     if (user) return res.json({ status: true, user });
     return res.status(404).json({ status: false, msg: "User not found" });
   } catch (error) {
@@ -59,7 +59,7 @@ module.exports.updateUserDetails = async (req, res) => {
         url: myCloud.secure_url,
       };
     }
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const user = await User.findByIdAndUpdate(req.user.id, req.body, {
       new: true,
     });
     if (!user)
