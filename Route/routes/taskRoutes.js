@@ -6,8 +6,9 @@ const {getAllTasks,getOneTask,createTask,updateTask,deleteTask,getATask}  = requ
 const {authentication} = require("../../Middleware/auth");
 
 router.get("/getalltasks",[authentication],getAllTasks);
-router.get("/getOneTask/:id",[authentication],getOneTask);
+router.get("/getOneTask",[authentication],getOneTask);
 
+//router.get()
 router.post("/createTask",createTask);
 router.put("/updateTask/:id",updateTask);
 router.delete("/deleteTask/:id",deleteTask);

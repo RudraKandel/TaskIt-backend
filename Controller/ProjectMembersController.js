@@ -11,7 +11,10 @@ module.exports.getAllProjectMembers = async (req, res) => {
         projectIds.push(developerProject.project);
       });
       if(projectIds.length>0){
-      const developers = await  ProjectMember.find({project: {$in:projectIds}}).populate('developer');
+      const developers = await  ProjectMember.find({
+        project: {$in:projectIds},
+        developer:{$ne:req.user.id}
+      }).populate('developer');
        return res.status(200).json({ status: true, msg: "project members found" , developers});
       }
       return res.status(400).json({status:false,msg:"No team members found"});
