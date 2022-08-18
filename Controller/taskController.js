@@ -16,9 +16,9 @@ module.exports.getAllTasks = async (req, res) => {
     const { role, id } = req.user;
     let tasks = [];
     if (role == "user" || role == "pm") {
-       tasks = await Task.find({ user_id: id ,...condition }).populate();
+       tasks = await Task.find({ user_id: id ,...condition });
     } 
-    else tasks = await Task.find({condition}).populate();
+    else tasks = await Task.find({condition});
     if (tasks.length > 0)
     return res.status(200).json({ status: true, msg: "The tasks are", tasks });
       return res
@@ -58,7 +58,7 @@ module.exports.createTask = async (req, res) => {
     );
     return res
       .status(200)
-      .json({ status: true, msg: "Task added sucessfully" });
+      .json({ status: true, msg: "Task added sucessfully" ,task });
   } catch (error) {
     return res.status(500).json({ status: false, msg: "Error in adding task" });
   }

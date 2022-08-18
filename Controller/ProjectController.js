@@ -17,7 +17,7 @@ module.exports.allProjects = async (req, res) => {
       const developerProjects = await ProjectMember.find({
         developer: id,
         ...condition,
-      }).populate();
+      });
       developerProjects.forEach((developerProject) => {
         projectIds.push(developerProject.project);
       });
@@ -25,8 +25,8 @@ module.exports.allProjects = async (req, res) => {
         projects = await Project.find({
           _id: { $in: projectIds },
           ...condition,
-        }).populate("user");
-    } else projects = await Project.find().populate("user");
+        });
+    } else projects = await Project.find();
     if (projects.length > 0)
       return res
         .status(200)

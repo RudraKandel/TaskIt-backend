@@ -28,6 +28,7 @@ const projectSchema = new mongoose.Schema(
     project_manager: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required:true,
     },
    
   },
