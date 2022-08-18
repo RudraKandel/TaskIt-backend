@@ -27,7 +27,7 @@ module.exports.getAll = async (req, res) => {
 //to get a single user by id
 module.exports.getOne = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user.id);
     if (user) return res.json({ status: true, user });
     return res.status(404).json({ status: false, msg: "User not found" });
   } catch (error) {
@@ -41,25 +41,25 @@ module.exports.getOne = async (req, res) => {
 module.exports.updateUserDetails = async (req, res) => {
   try {
     //to add image
-    if (req.body.image !== "") {
-      const user = await User.findById(req.user.id);
+    // if (req.body.image !== "") {
+    //   const user = await User.findById(req.user.id);
   
-      const imageId = user.image.public_id;
+    //   const imageId = user.image.public_id;
   
-      await cloudinary.v2.uploader.destroy(imageId);
+    //   await cloudinary.v2.uploader.destroy(imageId);
   
-      const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-        folder: "userImages",
-        width: 150,
-        crop: "scale",
-      });
+    //   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
+    //     folder: "userImages",
+    //     width: 150,
+    //     crop: "scale",
+    //   });
   
-      req.body.image = {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      };
-    }
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    //   req.body.image = {
+    //     public_id: myCloud.public_id,
+    //     url: myCloud.secure_url,
+    //   };
+    // }
+    const user = await User.findByIdAndUpdate(req.user.id, req.body, {
       new: true,
     });
     if (!user)
@@ -68,6 +68,7 @@ module.exports.updateUserDetails = async (req, res) => {
       .status(202)
       .json({ status: true, msg: "User updated sucessfully", user });
   } catch (error) {
+    console.log(error)
     return res.status(404).json({ status: false, msg: "Error updating users" });
   }
 };
