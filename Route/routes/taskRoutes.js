@@ -9,7 +9,7 @@ router.get("/getalltasks",[authentication],getAllTasks);
 router.get("/getOneTask",[authentication],getOneTask);
 
 //router.get()
-router.post("/createTask",createTask);
+router.post("/createTask/:id",createTask); //id of the project project id
 router.put("/updateTask/:id",updateTask);
 router.delete("/deleteTask/:id",deleteTask);
 

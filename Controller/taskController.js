@@ -60,6 +60,7 @@ module.exports.createTask = async (req, res) => {
       .status(200)
       .json({ status: true, msg: "Task added sucessfully" ,task });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ status: false, msg: "Error in adding task" });
   }
 };
