@@ -6,9 +6,10 @@ const {
 getAllProjectMembers,getOneProjectMember,updateProjectMember,
 deleteProjectMember,addProjectMember
 } = require("../../Controller/ProjectMembersController");
+const { authentication } = require("../../Middleware/auth");
 
 //Routes
-router.get("/getAllProjectMembers/:id", getAllProjectMembers);
+router.get("/getAllProjectMembers",[authentication], getAllProjectMembers);
 router.get("/getOneProjectMember/:id", getOneProjectMember);
 router.post("/addProjectMember", addProjectMember);
 router.put("/updateProjectMember/:id", updateProjectMember);
