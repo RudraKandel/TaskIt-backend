@@ -15,7 +15,7 @@ router.put('/update-user',[authentication],updateUserDetails);
 router.get('/get-user',[authentication],getOne);
 
 //by admin
-router.put('/update-roles',updateRole);
+router.put('/update-roles/:id',updateRole);
 router.get('/getall-users', getAll);
 router.delete('/delete/:id',deleteUser);
 

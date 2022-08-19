@@ -11,8 +11,9 @@ module.exports.allProjects = async (req, res) => {
     if (status) condition.status = status;
 
     const { role, id } = req.user;
+    console.log(role);
     let projects = [];
-    if (role == "user" || role == "pm") {
+    if (role == "user") {
       let projectIds = [];
       const developerProjects = await ProjectMember.find({
         developer: id,
@@ -26,7 +27,10 @@ module.exports.allProjects = async (req, res) => {
           _id: { $in: projectIds },
           ...condition,
         });
-    } else projects = await Project.find();
+    } else {
+      if (role == "pm") condition.project_manager = req.user.id;
+      projects = await Project.find(condition);
+    }
     if (projects.length > 0)
       return res
         .status(200)
@@ -58,12 +62,13 @@ module.exports.singleProject = async (req, res) => {
 //add project to database
 module.exports.addProject = async (req, res) => {
   try {
-    req.body.project_manager =req.body.id;
+    req.body.project_manager = req.body.id;
     await Project.create(req.body);
     return res
       .status(202)
       .json({ status: true, msg: "Project added sucessfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ status: false, msg: " error while adding Project" });
   }
 };

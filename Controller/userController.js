@@ -14,7 +14,7 @@ const RoleModel = require("../Model/RoleModel");
 //to get all the users
 module.exports.getAll = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().populate('role_id');
     if (users.length > 0) return res.json({ status: true, users });
     return res.status(404).json({ status: false, msg: "Users not found" });
   } catch (error) {
@@ -41,24 +41,24 @@ module.exports.getOne = async (req, res) => {
 module.exports.updateUserDetails = async (req, res) => {
   try {
     //to add image
-    if (req.body.image !== "") {
-      const user = await User.findById(req.user.id);
+    // if (req.body.image !== "") {
+    //   const user = await User.findById(req.user.id);
   
-      const imageId = user.image.public_id;
+    //   const imageId = user.image.public_id;
   
-      await cloudinary.v2.uploader.destroy(imageId);
+    //   await cloudinary.v2.uploader.destroy(imageId);
   
-      const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-        folder: "userImages",
-        width: 150,
-        crop: "scale",
-      });
+    //   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
+    //     folder: "userImages",
+    //     width: 150,
+    //     crop: "scale",
+    //   });
   
-      req.body.image = {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      };
-    }
+    //   req.body.image = {
+    //     public_id: myCloud.public_id,
+    //     url: myCloud.secure_url,
+    //   };
+    // }
     const user = await User.findByIdAndUpdate(req.user.id, req.body, {
       new: true,
     });
@@ -105,7 +105,7 @@ module.exports.signUp = async (req, res) => {
       "password",
     ]);
     datas.role_id=checkRole._id;
-
+    console.log(datas);
     const user = await User.create(datas);
     return sendToken(user, 201, res);
     // return res.json({ status: true, msg: "New user added sucessfully" });
